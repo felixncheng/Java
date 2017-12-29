@@ -12,14 +12,14 @@ public class ThreadResearch {
         int threadCount = 5;
         long sleepTimes = 1000;
         /*
-         * joinTest是同步执行，所以总耗时接近{threadCount*sleepTime}
-         * countDownLatch是异步执行，所以总耗时接近{sleepTime}
+         * joinTest是同步执行，所以总耗时大于{threadCount*sleepTime}
+         * countDownLatch是异步执行，所以总耗时大于{sleepTime}
          * */
         joinTest(threadCount, sleepTimes);
-        countDownLactchTest(threadCount, sleepTimes);
+        countDownLatchTest(threadCount, sleepTimes);
     }
 
-    private static void countDownLactchTest(int threadCount, final long sleepTimes) throws InterruptedException {
+    private static void countDownLatchTest(int threadCount, final long sleepTimes) throws InterruptedException {
         CountDownLatch latch = new CountDownLatch(threadCount);
         long startTime = System.currentTimeMillis();
         for (int i = 0; i < threadCount; i++) {
@@ -34,7 +34,8 @@ public class ThreadResearch {
         }
         latch.await();
         long endTime = System.currentTimeMillis();
-        System.out.println("countDownLatch耗时" + (endTime - startTime));
+        long costTime = endTime - startTime;
+        System.out.println("countDownLatch耗时" + " " + (costTime > sleepTimes ? "测试通过" : "测试失败"));
     }
 
 
@@ -52,6 +53,7 @@ public class ThreadResearch {
             thread.join();
         }
         long endTime = System.currentTimeMillis();
-        System.out.println("join耗时" + (endTime - startTime));
+        long costTime = endTime - startTime;
+        System.out.println("join耗时" + costTime + " " + (costTime + costTime > threadCount * sleepTimes ? "测试通过" : "测试失败"));
     }
 }

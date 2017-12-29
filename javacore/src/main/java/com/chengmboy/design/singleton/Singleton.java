@@ -5,7 +5,10 @@ import java.util.UUID;
 /**
  * @author cheng_mboy
  */
-public enum Singleton{
+public enum Singleton {
+    /**
+     * 单例
+     */
     INSTANCE;
     private String id = UUID.randomUUID().toString();
     private int counter;
@@ -15,7 +18,9 @@ public enum Singleton{
     }
 
     public void increment() {
-        String name = Thread.currentThread().getName();
+        /*
+         * 增加线程竞争机会
+         * */
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {

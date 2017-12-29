@@ -2,44 +2,63 @@ package com.chengmboy.design.singleton;
 
 import java.util.concurrent.*;
 
+import com.chengmboy.util.ThreadUtil;
+
 /**
  * @author cheng_mboy
  */
 public class SingletonTest {
 
-    private static int threadCount = 3;
-    private static CountDownLatch LATCH = new CountDownLatch(threadCount);
-    private static final ThreadFactory THREAD_FACTORY = Executors.defaultThreadFactory();
-    private static final ThreadPoolExecutor EXECUTOR = new ThreadPoolExecutor(threadCount, threadCount,
-            0L, TimeUnit.MICROSECONDS, new LinkedBlockingQueue<>(threadCount),
-            THREAD_FACTORY, new ThreadPoolExecutor.AbortPolicy());
-
     public static void main(String[] args) throws InterruptedException {
-        testEnumFunction();
-        EXECUTOR.shutdown();
+        /*
+         * 执行测试10次 true 代表线程安全，false代表线程不安全
+         * 存在输出结果false。
+         */
+        for (int i = 0; i < 10; i++) {
+            enumFunctionTest();
+        }
+        //enumTest();
     }
 
     /**
      * 测试枚举类成员方法是否线程安全
      * 结论 只有枚举类的构造函数是线程安全的，其他成员方法非线程安全
      */
-    private static void testEnumFunction() throws InterruptedException {
-        for (int j = 0; j < 10; j++) {
-            LATCH = new CountDownLatch(threadCount);
-            long start = System.currentTimeMillis();
-            for (int i = 0; i < threadCount; i++) {
-                EXECUTOR.execute(SingletonTest::run);
-            }
-            LATCH.await();
-            System.out.println("主线程执行完毕! 总耗时" + (System.currentTimeMillis() - start) + ": " + (threadCount == Singleton.INSTANCE.getValue()));
+    private static void enumFunctionTest() throws InterruptedException {
+        int threadCount = 3;
+        int blockQueueSize = 3;
+        ThreadPoolExecutor executor = ThreadUtil.getThreadPoolExecutor(threadCount, blockQueueSize);
+        final CountDownLatch latch = new CountDownLatch(threadCount);
+        long start = System.currentTimeMillis();
+        for (int i = 0; i < threadCount; i++) {
+            executor.execute(() -> {
+                Singleton.INSTANCE.increment();
+                latch.countDown();
+            });
         }
+        latch.await();
+        System.out.println(threadCount == Singleton.INSTANCE.getValue());
+        executor.shutdown();
     }
 
-
-    private static void run() {
-        Singleton.INSTANCE.increment();
-        LATCH.countDown();
+    /**
+     * 测试枚举项单例是否线程安全。
+     */
+    private static void enumTest() throws InterruptedException {
+        int threadCount = 3;
+        int blockQueueSize = 3;
+        ThreadPoolExecutor executor = ThreadUtil.getThreadPoolExecutor(threadCount, blockQueueSize);
+        final CountDownLatch latch = new CountDownLatch(threadCount);
+        for (int i = 0; i < threadCount; i++) {
+            executor.execute(() -> {
+                Singleton instance = Singleton.INSTANCE;
+                Singleton instance1 = Singleton.INSTANCE;
+                System.out.println(instance == instance1);
+                latch.countDown();
+            });
+        }
+        latch.await();
+        executor.shutdown();
     }
-
 }
 
