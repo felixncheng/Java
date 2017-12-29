@@ -1,64 +1,48 @@
 package com.chengmboy.design.singleton;
 
-import java.util.concurrent.*;
-
-import com.chengmboy.util.ThreadUtil;
+import java.io.*;
 
 /**
  * @author cheng_mboy
  */
 public class SingletonTest {
 
-    public static void main(String[] args) throws InterruptedException {
-        /*
-         * 执行测试10次 true 代表线程安全，false代表线程不安全
-         * 存在输出结果false。
-         */
-        for (int i = 0; i < 10; i++) {
-            enumFunctionTest();
-        }
-        //enumTest();
+
+    public static void main(String[] args) throws
+            CloneNotSupportedException,
+            IOException, ClassNotFoundException {
+        //   cloneTest();
+        serializeTest();
     }
 
     /**
-     * 测试枚举类成员方法是否线程安全
-     * 结论 只有枚举类的构造函数是线程安全的，其他成员方法非线程安全
+     * 测试单例模式能否被克隆破坏
+     * 结论 克隆破坏单例模式
+     * 期待输出 false
      */
-    private static void enumFunctionTest() throws InterruptedException {
-        int threadCount = 3;
-        int blockQueueSize = 3;
-        ThreadPoolExecutor executor = ThreadUtil.getThreadPoolExecutor(threadCount, blockQueueSize);
-        final CountDownLatch latch = new CountDownLatch(threadCount);
-        long start = System.currentTimeMillis();
-        for (int i = 0; i < threadCount; i++) {
-            executor.execute(() -> {
-                Singleton.INSTANCE.increment();
-                latch.countDown();
-            });
-        }
-        latch.await();
-        System.out.println(threadCount == Singleton.INSTANCE.getValue());
-        executor.shutdown();
+    private static void cloneTest() throws CloneNotSupportedException {
+        Singleton instance = Singleton.getInstance();
+        Singleton clone = (Singleton) instance.clone();
+        System.out.println(instance == clone);
     }
 
     /**
-     * 测试枚举项单例是否线程安全。
+     * 测试饿加载单例模式能否被序列化破坏
+     * 结论 序列化破坏单例模式
+     * 期待输出 false
      */
-    private static void enumTest() throws InterruptedException {
-        int threadCount = 3;
-        int blockQueueSize = 3;
-        ThreadPoolExecutor executor = ThreadUtil.getThreadPoolExecutor(threadCount, blockQueueSize);
-        final CountDownLatch latch = new CountDownLatch(threadCount);
-        for (int i = 0; i < threadCount; i++) {
-            executor.execute(() -> {
-                Singleton instance = Singleton.INSTANCE;
-                Singleton instance1 = Singleton.INSTANCE;
-                System.out.println(instance == instance1);
-                latch.countDown();
-            });
+    private static void serializeTest() throws IOException, ClassNotFoundException {
+        Singleton instance = Singleton.getInstance();
+        String name = "Singleton.dat";
+        try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(name))) {
+            outputStream.writeObject(instance);
+            try (ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(name))) {
+                Singleton deSerialize = (Singleton) inputStream.readObject();
+                System.out.println(instance == deSerialize);
+            }
         }
-        latch.await();
-        executor.shutdown();
+        File file = new File(name);
+        //noinspection ResultOfMethodCallIgnored
+        file.delete();
     }
 }
-
