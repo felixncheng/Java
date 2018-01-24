@@ -2,7 +2,7 @@ package com.chengmboy.design.singleton;
 
 import java.util.concurrent.*;
 
-import com.chengmboy.util.ThreadUtil;
+import com.chengmboy.util.ThreadUtils;
 
 /**
  * @author cheng_mboy
@@ -23,7 +23,7 @@ public class SingletonInnerTest {
     private static void nestedTest() throws InterruptedException {
         int threadCount = 3;
         int blockQueueSize = 3;
-        ThreadPoolExecutor executor = ThreadUtil.getThreadPoolExecutor(threadCount, blockQueueSize);
+        ThreadPoolExecutor executor = ThreadUtils.getThreadPoolExecutor(threadCount, blockQueueSize);
         CountDownLatch latch = new CountDownLatch(threadCount);
         for (int i = 0; i < threadCount; i++) {
             executor.execute(() -> {

@@ -3,7 +3,7 @@ package com.chengmboy.design.singleton;
 import java.io.*;
 import java.util.concurrent.*;
 
-import com.chengmboy.util.ThreadUtil;
+import com.chengmboy.util.ThreadUtils;
 
 /**
  * @author cheng_mboy
@@ -26,7 +26,7 @@ public class SingletonEnumTest {
         for (int j = 0; j < 10; j++) {
             int threadCount = 3;
             int blockQueueSize = 3;
-            ThreadPoolExecutor executor = ThreadUtil.getThreadPoolExecutor(threadCount, blockQueueSize);
+            ThreadPoolExecutor executor = ThreadUtils.getThreadPoolExecutor(threadCount, blockQueueSize);
             final CountDownLatch latch = new CountDownLatch(threadCount);
             for (int i = 0; i < threadCount; i++) {
                 executor.execute(() -> {
@@ -48,7 +48,7 @@ public class SingletonEnumTest {
     private static void enumTest() throws InterruptedException {
         int threadCount = 3;
         int blockQueueSize = 3;
-        ThreadPoolExecutor executor = ThreadUtil.getThreadPoolExecutor(threadCount, blockQueueSize);
+        ThreadPoolExecutor executor = ThreadUtils.getThreadPoolExecutor(threadCount, blockQueueSize);
         final CountDownLatch latch = new CountDownLatch(threadCount);
         for (int i = 0; i < threadCount; i++) {
             executor.execute(() -> {

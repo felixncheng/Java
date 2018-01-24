@@ -5,7 +5,7 @@ import java.util.concurrent.*;
 /**
  * @author cheng_mboy
  */
-public class ThreadUtil {
+public class ThreadUtils {
 
     private static final ThreadFactory THREAD_FACTORY = Executors.defaultThreadFactory();
 
