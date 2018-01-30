@@ -14,26 +14,38 @@ public class HttpServer {
         ServerSocket ss = new ServerSocket(8888);
         while (true) {
             Socket socket = ss.accept();
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            try (InputStream inputStream = socket.getInputStream();
                  PrintWriter pw = new PrintWriter(socket.getOutputStream())) {
-                String requestHeader;
+                int read;
+                int lastIndex = 0;
                 int contentLength = 0;
-                while ((requestHeader = reader.readLine()) != null && !requestHeader.isEmpty()) {
-                    System.out.println(requestHeader);
-                    if (requestHeader.startsWith("content-length:")) {
-                        int i = requestHeader.indexOf(":");
-                        String s = requestHeader.substring(i + 2);
-                        contentLength = Integer.valueOf(s);
+                while ((read = inputStream.read()) != -1) {
+                    outputStream.write(read);
+                    byte[] array = outputStream.toByteArray();
+                    if (isLine(array)) {
+                        int i = array.length - lastIndex;
+                        byte[] line = new byte[i];
+                        System.arraycopy(array, lastIndex, line, 0, i);
+                        String requestHeader = new String(line);
+                        lastIndex = array.length;
+                        if (requestHeader.startsWith("content-length:")) {
+                            int k = requestHeader.indexOf(":");
+                            String s = requestHeader.substring(k + 2, requestHeader.length() - 2);
+                            contentLength = Integer.valueOf(s);
+                        }
+                    }
+                    if (isOver(array)) {
+                        break;
                     }
                 }
-                StringBuilder sb = new StringBuilder();
                 if (contentLength > 0) {
                     for (int i = 0; i < contentLength; i++) {
-                        char read = (char) reader.read();
-                        sb.append(read);
+                        outputStream.write(inputStream.read());
                     }
-                    System.out.println(sb);
+                    System.out.println(new String(outputStream.toByteArray()));
                 }
+
                 pw.println("HTTP/1.1 200 OK");
                 pw.println("Content-type:application/json;charset=UTF-8");
                 pw.println();
@@ -43,5 +55,27 @@ public class HttpServer {
             }
             socket.close();
         }
+    }
+
+    private static boolean isLine(byte[] bytes) {
+        int length = bytes.length;
+        if (length < 2) {
+            return false;
+        }
+        if (bytes[length - 1] == 10 && bytes[length - 2] == 13) {
+            return true;
+        }
+        return false;
+    }
+
+    private static boolean isOver(byte[] bytes) {
+        int length = bytes.length;
+        if (length < 4) {
+            return false;
+        }
+        if (bytes[length - 1] == 10 && bytes[length - 2] == 13 && bytes[length - 3] == 10 && bytes[length - 4] == 13) {
+            return true;
+        }
+        return false;
     }
 }
