@@ -34,6 +34,7 @@ public class HttpServer {
                             String s = requestHeader.substring(k + 2, requestHeader.length() - 2);
                             contentLength = Integer.valueOf(s);
                         }
+                        System.out.print(requestHeader);
                     }
                     if (isOver(array)) {
                         break;
@@ -43,9 +44,11 @@ public class HttpServer {
                     for (int i = 0; i < contentLength; i++) {
                         outputStream.write(inputStream.read());
                     }
-                    System.out.println(new String(outputStream.toByteArray()));
                 }
-
+                byte[] bytes = outputStream.toByteArray();
+                for (int i = lastIndex; i < bytes.length; i++) {
+                    System.out.print(bytes[i] + " ");
+                }
                 pw.println("HTTP/1.1 200 OK");
                 pw.println("Content-type:application/json;charset=UTF-8");
                 pw.println();
