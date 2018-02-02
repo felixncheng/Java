@@ -1,4 +1,4 @@
-package com.chengmboy.controller.google.authenticator;
+package com.chengmboy.other.google.authenticator;
 
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -12,6 +12,8 @@ import org.apache.commons.codec.binary.Base32;
 /**
  * Java Server side class for Google Authenticator's TOTP generator
  * Thanks to Enrico's blog for the sample code:
+ *
+ * @author other
  */
 public class GoogleAuthenticator {
 
@@ -41,8 +43,7 @@ public class GoogleAuthenticator {
         Base32 codec = new Base32();
         byte[] secretKey = Arrays.copyOf(buffer, SECRET_SIZE);
         byte[] bEncodedKey = codec.encode(secretKey);
-        String encodedKey = new String(bEncodedKey);
-        return encodedKey;
+        return new String(bEncodedKey);
     }
 
     /**
@@ -61,16 +62,14 @@ public class GoogleAuthenticator {
     }
 
     public static String getQRBarcode(String user, String host, String secret) {
-        String code = "otpauth://totp/" + host + "-" + user + "?secret=" + secret;
-        return code;
+        return "otpauth://totp/" + host + "-" + user + "?secret=" + secret;
     }
 
     public static String getQRBarcode(String user, String host, String secret, String issuer) {
-        String code = "otpauth://totp/" + user + "?secret=" + secret + "&issuer=" + issuer;
-        return code;
+        return "otpauth://totp/" + user + "?secret=" + secret + "&issuer=" + issuer;
     }
 
-    private static int verify_code(byte[] key, long t)
+    private static int verifyCode(byte[] key, long t)
             throws NoSuchAlgorithmException, InvalidKeyException {
         byte[] data = new byte[8];
         long value = t;
@@ -119,7 +118,7 @@ public class GoogleAuthenticator {
      * @param timeMsec The time in msec (System.currentTimeMillis() for example)
      * @return
      */
-    public boolean check_code(String secret, long code, long timeMsec) {
+    public boolean checkCode(String secret, long code, long timeMsec) {
         Base32 codec = new Base32();
         byte[] decodedKey = codec.decode(secret);
 
@@ -132,7 +131,7 @@ public class GoogleAuthenticator {
         for (int i = -windowSize; i <= windowSize; ++i) {
             long hash;
             try {
-                hash = verify_code(decodedKey, t + i);
+                hash = verifyCode(decodedKey, t + i);
             } catch (Exception e) {
                 // Yes, this is bad form - but
                 // the exceptions thrown would be rare and a static configuration problem

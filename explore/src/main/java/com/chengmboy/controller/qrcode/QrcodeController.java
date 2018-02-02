@@ -1,5 +1,6 @@
 package com.chengmboy.controller.qrcode;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +20,15 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 public class QrcodeController {
+
+    public static void main(String[] args) throws WriterException, IOException {
+        Map<EncodeHintType, Object> hints = new HashMap<>();
+        hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
+        hints.put(EncodeHintType.MARGIN, 0);
+        BitMatrix bitMatrix = new MultiFormatWriter()
+                .encode("hello", BarcodeFormat.QR_CODE, 300, 300, hints);
+        MatrixToImageWriter.writeToStream(bitMatrix, "png", new FileOutputStream("test.png"));
+    }
 
     @GetMapping("qrcode")
     public void getQrcode(HttpServletResponse response) throws IOException, WriterException {
