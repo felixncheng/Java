@@ -16,6 +16,7 @@ public class HttpClient {
             pw.println("Connection: keep-alive");
             pw.println("");
             pw.flush();
+            socket.shutdownOutput();
             String info;
             while ((info = br.readLine()) != null) {
                 System.out.println(info);

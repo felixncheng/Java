@@ -1,6 +1,7 @@
 package com.chengmboy.core.thread;
 
 import java.util.concurrent.*;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * @author cheng_mboy
@@ -8,7 +9,54 @@ import java.util.concurrent.*;
 @SuppressWarnings("AlibabaAvoidManuallyCreateThread")
 public class ThreadResearch {
 
-    public static void main(String[] args) throws InterruptedException {
+    private static ReentrantLock lockA = new ReentrantLock();
+    private static ReentrantLock lockB = new ReentrantLock();
+
+    public static void main(String[] args) {
+        testDeadLock();
+    }
+
+
+    /**
+     * 线程死锁例子
+     */
+    private static void testDeadLock() {
+        Thread threadA = new Thread(ThreadResearch::A);
+        Thread threadB = new Thread(ThreadResearch::B);
+        threadA.start();
+        threadB.start();
+    }
+
+    private static void A() {
+        try {
+            lockA.lock();
+            Thread.sleep(1000);
+            lockB.lock();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } finally {
+            lockA.unlock();
+            lockB.unlock();
+        }
+    }
+
+    private static void B() {
+        try {
+            lockB.lock();
+            Thread.sleep(1000);
+            lockA.lock();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } finally {
+            lockB.unlock();
+            lockA.unlock();
+        }
+    }
+
+    /**
+     * 测试join与countDownLatch
+     */
+    private static void testJoinAndCountDownLatch() throws InterruptedException {
         int threadCount = 5;
         long sleepTimes = 1000;
         /*
