@@ -1,4 +1,4 @@
-package com.chengmboy.controller.qrcode;
+package com.chengmboy.app.controller.qrcode;
 
 import java.io.FileOutputStream;
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package com.chengmboy.controller.google.authenticator;
+package com.chengmboy.app.controller.google.authenticator;
 
 import com.chengmboy.other.google.authenticator.GoogleAuthenticator;
 import org.springframework.web.bind.annotation.GetMapping;

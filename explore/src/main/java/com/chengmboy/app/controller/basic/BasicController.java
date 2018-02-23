@@ -1,4 +1,4 @@
-package com.chengmboy.controller.basic;
+package com.chengmboy.app.controller.basic;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
