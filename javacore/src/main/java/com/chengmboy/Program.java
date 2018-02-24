@@ -1,6 +1,5 @@
 package com.chengmboy;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 
@@ -12,11 +11,8 @@ public class Program {
     private static boolean ready;
 
     public static void main(String[] args) throws IOException {
-       int read=255;
-        byte value = (byte) read;
-        char a= 0x0060;
-        System.out.println(value);
-        System.out.println(a);
+        String s = "abc";
+        System.out.println(s.charAt(0)+" "+s.charAt(s.length()-1));
     }
 
     private static boolean isLine(byte[] bytes) {
