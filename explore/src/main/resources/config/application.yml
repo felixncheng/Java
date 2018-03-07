@@ -7,3 +7,9 @@ spring:
 
 mybatis:
   show-sql: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
