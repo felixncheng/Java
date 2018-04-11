@@ -13,15 +13,7 @@ import redis.clients.jedis.JedisPubSub;
 public class JedisUtil {
 
     public static void main(String[] args) throws InterruptedException {
-        Jedis jedis = new Jedis("localhost");
-        ThreadPoolExecutor executor = ThreadUtils.getThreadPoolExecutor(3, 3);
-        executor.execute(()-> jedis.subscribe(new JedisPubSub() {
-            @Override
-            public void onMessage(String channel, String message) {
-                System.out.println(channel+": "+message);
-            }
-        },"chat"));
-        Jedis jedis12 = new Jedis("localhost");
-        jedis12.publish("chat", "hello");
+        Jedis jedis = new Jedis("192.168.0.2");
+        String key = "m_klines_s_87_t_0";
     }
 }

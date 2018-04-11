@@ -10,9 +10,10 @@ import java.net.Socket;
 public class SocketClient {
 
     public static void main(String[] args) throws IOException {
-        Socket socket = new Socket("localhost", 8888);
+        Socket socket = new Socket("localhost", 8080);
         OutputStream outputStream = socket.getOutputStream();
         outputStream.write(97);
+        outputStream.flush();
         socket.shutdownOutput();
     }
 }

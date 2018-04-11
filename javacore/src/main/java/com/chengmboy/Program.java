@@ -1,6 +1,9 @@
 package com.chengmboy;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.Date;
 
 
 /**
@@ -11,8 +14,22 @@ public class Program {
     private static boolean ready;
 
     public static void main(String[] args) throws IOException {
-        String s = "abc";
-        System.out.println(s.charAt(0)+" "+s.charAt(s.length()-1));
+        String symbolName = "zecusdt";
+        String req = "market." + symbolName + ".kline.1min";
+       String a = "{ \"req\" :\""+req+"\", \"id\": \"req"+symbolName+"\"}";
+        System.out.println(a);
+    }
+
+    static class User{
+        private int id;
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
     }
 
     private static boolean isLine(byte[] bytes) {
