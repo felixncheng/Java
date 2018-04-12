@@ -1,6 +1,7 @@
 
 package com.chengmboy.netty.example.websocket;
 
+import java.net.InetSocketAddress;
 import java.net.URI;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -17,6 +18,7 @@ import io.netty.handler.codec.http.HttpClientCodec;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.websocketx.*;
 import io.netty.handler.codec.http.websocketx.extensions.compression.WebSocketClientCompressionHandler;
+import io.netty.handler.proxy.Socks5ProxyHandler;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
@@ -36,8 +38,7 @@ public final class WebSocketClient {
             LOGGER.info("正在连接"+URL);
             B.connect(uri.getHost(), 443).addListener(x -> {
                 if (!x.isSuccess()) {
-                    LOGGER.error("websocket连接失败，三秒后正在重连");
-                    Thread.sleep(3000);
+                    LOGGER.error("websocket连接失败");
                     WebSocketClient.connect();
                 }
             }).sync();
@@ -91,7 +92,7 @@ public final class WebSocketClient {
                                 new HttpObjectAggregator(8192),
                                 WebSocketClientCompressionHandler.INSTANCE,
                                 handler);
-                        // p.addFirst(new Socks5ProxyHandler(new InetSocketAddress("127.0.0.1", 1080)));
+                         //p.addFirst(new Socks5ProxyHandler(new InetSocketAddress("127.0.0.1", 1080)));
                     }
                 });
         WebSocketClient.connect();

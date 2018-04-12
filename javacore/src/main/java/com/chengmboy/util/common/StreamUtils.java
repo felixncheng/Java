@@ -1,4 +1,4 @@
-package com.chengmboy.util;
+package com.chengmboy.util.common;
 
 import java.io.*;
 

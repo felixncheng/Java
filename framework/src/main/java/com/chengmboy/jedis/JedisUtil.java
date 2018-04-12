@@ -1,11 +1,6 @@
 package com.chengmboy.jedis;
 
-import java.util.Set;
-import java.util.concurrent.ThreadPoolExecutor;
-
-import com.chengmboy.util.ThreadUtils;
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPubSub;
 
 /**
  * @author cheng_mboy

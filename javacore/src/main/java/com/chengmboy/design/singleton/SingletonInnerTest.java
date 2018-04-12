@@ -2,7 +2,7 @@ package com.chengmboy.design.singleton;
 
 import java.util.concurrent.*;
 
-import com.chengmboy.util.ThreadUtils;
+import com.chengmboy.util.common.ThreadUtils;
 
 /**
  * @author cheng_mboy

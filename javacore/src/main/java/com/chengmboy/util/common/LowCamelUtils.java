@@ -1,9 +1,9 @@
-package com.chengmboy.algorithm.string;
+package com.chengmboy.util.common;
 
 /**
  * @author cheng_mboy
  */
-public class LowCamelUtil {
+public class LowCamelUtils {
 
     private static final char A = 'A';
     private static final char Z = 'Z';

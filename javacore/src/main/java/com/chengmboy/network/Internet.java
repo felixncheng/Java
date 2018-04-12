@@ -3,11 +3,10 @@ package com.chengmboy.network;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.Random;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
-import com.chengmboy.util.StreamUtils;
+import com.chengmboy.util.common.StreamUtils;
 
 /**
  * @author cheng_mboy
