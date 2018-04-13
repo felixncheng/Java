@@ -1,8 +1,8 @@
-package com.chengmboy.util.crypto;
+package com.chengmboy.util.common.crypto;
 
 import java.security.*;
 
-import com.chengmboy.util.crypto.exception.CryptoException;
+import com.chengmboy.util.common.crypto.exception.CryptoException;
 
 /**
  * 该HashMessage类为应用程序提供消息摘要算法的功能，如SHA-1或SHA-256。
