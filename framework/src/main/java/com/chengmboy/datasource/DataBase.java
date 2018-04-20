@@ -52,7 +52,7 @@ public class DataBase {
             }
             return filedMap;
         } catch (SQLException e) {
-            LOGGER.error("sql执行出错",e);
+            LOGGER.error("sql执行出错", e);
         }
         return null;
     }
@@ -75,8 +75,19 @@ public class DataBase {
             }
             return resultList;
         } catch (SQLException e) {
-            LOGGER.error("sql执行出错",e);
+            LOGGER.error("sql执行出错", e);
         }
         return null;
+    }
+
+    public int deleteAll(String sql) {
+        try {
+            Connection connection = this.dataSource.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            return preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            LOGGER.error("sql执行出错", e);
+        }
+        return -1;
     }
 }

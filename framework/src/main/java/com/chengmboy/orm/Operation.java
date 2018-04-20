@@ -18,9 +18,9 @@ public class Operation {
         String password = "123456";
         String driver = "com.mysql.jdbc.Driver";*/
 
-        String url = "jdbc:mysql://192.168.0.184:3306/coin_sub?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=utf-8";
-        String username = "root";
-        String password = "123456";
+        String url = "jdbc:mysql://192.168.0.3:3306/coin_sub?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=utf-8";
+        String username = "digi";
+        String password = "digi123456";
         String driver = "com.mysql.jdbc.Driver";
         DataBase dataBase = new DataBase(url, username, password, driver);
         List<Map<String, Object>> select = dataBase.select("select * from ticker");

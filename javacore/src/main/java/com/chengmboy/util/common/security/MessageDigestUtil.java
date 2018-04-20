@@ -1,4 +1,4 @@
-package com.chengmboy.util.common.crypto;
+package com.chengmboy.util.common.security;
 
 import java.security.*;
 

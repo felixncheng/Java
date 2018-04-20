@@ -25,7 +25,7 @@ import com.chengmboy.util.common.crypto.exception.CryptoException;
  *
  * @author cheng_mboy
  */
-public class HmacUtill {
+public class HmacUtills {
 
     public static final String MD5 = "HmacMD5";
     public static final String SHA1 = "HmacSHA1";
