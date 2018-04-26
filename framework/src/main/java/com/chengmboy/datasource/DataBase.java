@@ -90,4 +90,62 @@ public class DataBase {
         }
         return -1;
     }
+
+    public int[] insertBatch(String sql, List<Object[]> paramList) {
+        try {
+            Connection connection = this.dataSource.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            for (Object[] objects : paramList) {
+                for (int i = 0; i < objects.length; i++) {
+                    preparedStatement.setObject(i + 1, objects[i]);
+                }
+                preparedStatement.addBatch();
+            }
+            return preparedStatement.executeBatch();
+        } catch (SQLException e) {
+            LOGGER.error("sql执行出错", e);
+        }
+        return null;
+    }
+
+    public int insertList(String sql, List<Object[]> paramList) {
+        try (Connection connection = this.dataSource.getConnection()) {
+            sql = sql.toUpperCase();
+            String valueSql = sql.substring(sql.indexOf("VALUES") + 6);
+            StringBuilder builder = new StringBuilder(sql);
+            for (int i = paramList.size()-1; i > 0; i--) {
+                builder.append(",")
+                        .append(valueSql);
+            }
+            sql = builder.toString();
+
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+            for (int i = 0; i < paramList.size(); i++) {
+                Object[] objects = paramList.get(i);
+                int length = objects.length;
+                for (int j = 0; j < length; j++) {
+                    preparedStatement.setObject((i * length) + j + 1, objects[j]);
+                }
+            }
+            return preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            LOGGER.error("sql执行出错", e);
+        }
+        return -1;
+    }
+
+
+    public int insert(String sql, Object[] objects) {
+        try (Connection connection = this.dataSource.getConnection();) {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            for (int i = 0; i < objects.length; i++) {
+                preparedStatement.setObject(i + 1, objects[i]);
+            }
+            return preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            LOGGER.error("sql执行出错", e);
+        }
+        return -1;
+    }
 }

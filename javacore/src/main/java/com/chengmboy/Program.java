@@ -3,9 +3,7 @@ package com.chengmboy;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -23,34 +21,20 @@ public class Program {
 
     private static AtomicInteger num = new AtomicInteger(100000);
 
-    public static void main(String[] args) throws IOException, InterruptedException {
+    public static void main(String[] args) {
+        String sql = "insert into dock_market_data(market_from,symbol,type,open,high,low,close,volume,volume_money,start_id,end_id)" +
+                " values (?,?,?,?,?," +
+                "?,?,?,?,?," +
+                "?)";
+        sql = sql.toUpperCase();
+        String valueSql = sql.substring(sql.indexOf("VALUES") + 6);
 
-        Object o = new Object();
-        ThreadPoolExecutor executorService = new ThreadPoolExecutor(100, 1000000,
-                0L, TimeUnit.MICROSECONDS, new SynchronousQueue<>(),
-                Executors.defaultThreadFactory(), new ThreadPoolExecutor.AbortPolicy());
-        long start = System.currentTimeMillis();
-        for (int i = 0; i < 100000; i++) {
-            executorService.submit(() ->
-            {
-                try {
-                    Thread.sleep(50);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                num.getAndDecrement();
-                System.out.println(executorService);
-            });
+        StringBuilder builder = new StringBuilder(sql);
+        for (int i = 5; i > 0; i--) {
+            builder.append(",")
+                    .append(valueSql);
         }
-        out:
-        while (true) {
-            while (num.get() == 0) {
-                long end = System.currentTimeMillis();
-                System.out.println("执行时间 "+ (end - start));
-                break out;
-            }
-        }
-        executorService.shutdown();
+        System.out.println(builder.toString());
     }
 
     private static boolean isLine(byte[] bytes) {

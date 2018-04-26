@@ -24,8 +24,22 @@ public class JedisUtil {
         int[] types = {0, 1, 2, 9, 10, 3, 4, 5, 6};
 
         deleteAll(ids, types);
+/*
+       for (int i = 3; i > 0; i--) {
+            delete();
+        }*/
     }
 
+    private static void delete() {
+        int[] ids = {87, 101, 102, 103, 104, 105, 106, 107, 108, 113, 116, 117};
+        int[] types = {0, 1, 2, 9, 10, 3, 4, 5, 6};
+        for (int id : ids) {
+            for (int type : types) {
+                jedis.rpop("m_klines_s_"+id+"_t_"+type);
+            }
+        }
+
+    }
 
     private static void getKeys() {
         int[] huobiIds = {79,69,68,78};
