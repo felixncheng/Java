@@ -1,11 +1,15 @@
 package com.chengmboy;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
+import java.net.URL;
+import java.net.URLConnection;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.ReentrantLock;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -21,20 +25,27 @@ public class Program {
 
     private static AtomicInteger num = new AtomicInteger(100000);
 
-    public static void main(String[] args) {
-        String sql = "insert into dock_market_data(market_from,symbol,type,open,high,low,close,volume,volume_money,start_id,end_id)" +
-                " values (?,?,?,?,?," +
-                "?,?,?,?,?," +
-                "?)";
-        sql = sql.toUpperCase();
-        String valueSql = sql.substring(sql.indexOf("VALUES") + 6);
+    public static void main(String[] args) throws InterruptedException {
+        ScheduledExecutorService service = Executors.newScheduledThreadPool(5);
 
-        StringBuilder builder = new StringBuilder(sql);
-        for (int i = 5; i > 0; i--) {
-            builder.append(",")
-                    .append(valueSql);
-        }
-        System.out.println(builder.toString());
+        ScheduledFuture<?> schedule = service.schedule(() -> {
+            try {
+                System.out.println("开始线程状态" + Thread.interrupted());
+                long time = System.currentTimeMillis();
+                while ((System.currentTimeMillis() - time < 3000)) {
+
+                }
+                System.out.println("中止后线程状态" + Thread.interrupted());
+            } finally {
+                System.out.println("finally");
+            }
+        }, 3, TimeUnit.SECONDS);
+
+        Thread.sleep(3100);
+        schedule.cancel(false);
+        System.out.println("线程已被中断");
+
+
     }
 
     private static boolean isLine(byte[] bytes) {
