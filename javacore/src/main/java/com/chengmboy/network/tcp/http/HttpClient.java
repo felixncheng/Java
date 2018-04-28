@@ -1,4 +1,4 @@
-package com.chengmboy.network.http;
+package com.chengmboy.network.tcp.http;
 
 import java.io.*;
 import java.net.Socket;

@@ -1,4 +1,4 @@
-package com.chengmboy.network;
+package com.chengmboy.network.tcp;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
