@@ -1,4 +1,4 @@
-package com.chengmboy.util.common.crypto.exception;
+package com.chengmboy.util.exception;
 
 /**
  * @author cheng_mboy

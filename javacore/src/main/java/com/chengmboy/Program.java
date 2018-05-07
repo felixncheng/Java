@@ -1,10 +1,10 @@
 package com.chengmboy;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.net.URLConnection;
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.*;
@@ -13,6 +13,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.chengmboy.util.common.StreamUtils;
 import com.chengmboy.util.common.ThreadUtils;
 
 
@@ -25,26 +26,11 @@ public class Program {
 
     private static AtomicInteger num = new AtomicInteger(100000);
 
-    public static void main(String[] args) throws InterruptedException {
-        ScheduledExecutorService service = Executors.newScheduledThreadPool(5);
+    public static void main(String[] args) throws InterruptedException, IOException {
 
-        ScheduledFuture<?> schedule = service.schedule(() -> {
-            try {
-                System.out.println("开始线程状态" + Thread.interrupted());
-                long time = System.currentTimeMillis();
-                while ((System.currentTimeMillis() - time < 3000)) {
-
-                }
-                System.out.println("中止后线程状态" + Thread.interrupted());
-            } finally {
-                System.out.println("finally");
-            }
-        }, 3, TimeUnit.SECONDS);
-
-        Thread.sleep(3100);
-        schedule.cancel(false);
-        System.out.println("线程已被中断");
-
+        int a = 255;
+        byte b = (byte) a;
+        System.out.println(b);
 
     }
 

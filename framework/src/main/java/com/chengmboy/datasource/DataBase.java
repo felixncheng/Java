@@ -80,7 +80,7 @@ public class DataBase {
         return null;
     }
 
-    public int deleteAll(String sql) {
+    public int excuteUpdate(String sql) {
         try {
             Connection connection = this.dataSource.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql);

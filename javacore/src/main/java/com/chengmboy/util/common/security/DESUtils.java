@@ -6,7 +6,7 @@ import java.util.Base64;
 import javax.crypto.*;
 import javax.crypto.spec.DESKeySpec;
 
-import com.chengmboy.util.common.crypto.exception.CryptoException;
+import com.chengmboy.util.exception.CryptoException;
 
 
 /**

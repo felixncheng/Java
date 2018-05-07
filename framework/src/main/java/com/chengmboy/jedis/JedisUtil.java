@@ -1,6 +1,5 @@
 package com.chengmboy.jedis;
 
-import java.time.LocalDateTime;
 import java.util.*;
 
 import com.alibaba.fastjson.JSON;
@@ -64,7 +63,7 @@ public class JedisUtil {
         String password = "digi123456";
         String driver = "com.mysql.jdbc.Driver";
         DataBase dataBase = new DataBase(url, username, password, driver);
-        int i = dataBase.deleteAll("delete from dock_market_data;");
+        int i = dataBase.excuteUpdate("delete from dock_market_data;");
         System.out.println(i);
     }
 

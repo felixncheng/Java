@@ -5,7 +5,7 @@ import java.security.NoSuchAlgorithmException;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
-import com.chengmboy.util.common.crypto.exception.CryptoException;
+import com.chengmboy.util.exception.CryptoException;
 
 /**
  * 该类提供了“消息验证码”（MAC）算法的功能。
