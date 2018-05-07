@@ -1,4 +1,4 @@
-package com.chengmboy.core;
+package com.chengmboy.util.common;
 
 /**
  * @author cheng_mboy
