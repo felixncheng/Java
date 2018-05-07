@@ -1,11 +1,8 @@
 package com.chengmboy.util.common.crypto;
 
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
+import java.security.GeneralSecurityException;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-
-import com.chengmboy.util.exception.CryptoException;
 
 /**
  * 该类提供了“消息验证码”（MAC）算法的功能。
@@ -32,45 +29,41 @@ public class HmacUtills {
     public static final String SHA256 = "HmacSHA256";
     private static final char[] HEX_DIGITS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws GeneralSecurityException {
         System.out.println(sha1Encrypt2HexString("abc".getBytes(), "key".getBytes()));
         System.out.println(md5Encrypt2HexString("abc".getBytes(), "key".getBytes()));
     }
 
-    public static byte[] encrypt(byte[] data, byte[] key, String algorithm) {
-        try {
-            SecretKeySpec secret = new SecretKeySpec(key, algorithm);
-            Mac mac = Mac.getInstance(algorithm);
-            mac.init(secret);
-            return mac.doFinal(data);
-        } catch (NoSuchAlgorithmException | InvalidKeyException e) {
-            throw new CryptoException(e);
-        }
+    public static byte[] encrypt(byte[] data, byte[] key, String algorithm) throws GeneralSecurityException {
+        SecretKeySpec secret = new SecretKeySpec(key, algorithm);
+        Mac mac = Mac.getInstance(algorithm);
+        mac.init(secret);
+        return mac.doFinal(data);
     }
 
-    public static byte[] md5Encrypt(byte[] data, byte[] key) {
+    public static byte[] md5Encrypt(byte[] data, byte[] key) throws GeneralSecurityException {
         return encrypt(data, key, MD5);
     }
 
-    public static byte[] sha1Encrypt(byte[] data, byte[] key) {
+    public static byte[] sha1Encrypt(byte[] data, byte[] key) throws GeneralSecurityException {
         return encrypt(data, key, SHA1);
     }
 
-    public static byte[] sha256Encrypt(byte[] data, byte[] key) {
+    public static byte[] sha256Encrypt(byte[] data, byte[] key) throws GeneralSecurityException {
         return encrypt(data, key, SHA256);
     }
 
-    public static String md5Encrypt2HexString(byte[] data, byte[] key) {
+    public static String md5Encrypt2HexString(byte[] data, byte[] key) throws GeneralSecurityException {
         byte[] bytes = encrypt(data, key, MD5);
         return toHexString(bytes);
     }
 
-    public static String sha1Encrypt2HexString(byte[] data, byte[] key) {
+    public static String sha1Encrypt2HexString(byte[] data, byte[] key) throws GeneralSecurityException {
         byte[] bytes = encrypt(data, key, SHA1);
         return toHexString(bytes);
     }
 
-    public static String sha256Encrypt2HexString(byte[] data, byte[] key) {
+    public static String sha256Encrypt2HexString(byte[] data, byte[] key) throws GeneralSecurityException {
         byte[] bytes = encrypt(data, key, SHA256);
         return toHexString(bytes);
     }

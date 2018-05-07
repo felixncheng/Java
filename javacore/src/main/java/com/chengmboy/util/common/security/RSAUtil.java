@@ -2,7 +2,10 @@ package com.chengmboy.util.common.security;
 
 import java.security.*;
 import java.util.Base64;
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 import com.chengmboy.util.exception.CryptoException;
 
@@ -11,11 +14,11 @@ import com.chengmboy.util.exception.CryptoException;
  */
 public class RSAUtil {
 
-    public static void main(String[] args) {
+    public static void main(String[] args)throws GeneralSecurityException {
         process();
     }
 
-    private static void process() {
+    private static void process() throws GeneralSecurityException{
         KeyPair pair = generateKeyPair(1024);
         PublicKey publicKey = pair.getPublic();
         PrivateKey privateKey = pair.getPrivate();
@@ -39,39 +42,21 @@ public class RSAUtil {
         System.out.println(data1.equals(data) ? "确定本人发送消息！" : "不是本人发送的消息！");
     }
 
-    private static KeyPair generateKeyPair(int keysize) {
-        try {
-            KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
-            keyPairGenerator.initialize(keysize);
-            return keyPairGenerator.generateKeyPair();
-        } catch (NoSuchAlgorithmException e) {
-            throw new CryptoException(e);
-        }
+    private static KeyPair generateKeyPair(int keysize) throws NoSuchAlgorithmException {
+        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+        keyPairGenerator.initialize(keysize);
+        return keyPairGenerator.generateKeyPair();
     }
 
-    private static byte[] encrypt(byte[] data, Key key) {
-        try {
-            long s = System.nanoTime();
-            Cipher rsa = Cipher.getInstance("RSA");
-            rsa.init(Cipher.ENCRYPT_MODE, key);
-            byte[] bytes = rsa.doFinal(data);
-            System.out.println("非对称加密花费时间： "+ (System.nanoTime()-s));
-            return bytes;
-        } catch (Exception e) {
-            throw new CryptoException(e);
-        }
+    private static byte[] encrypt(byte[] data, Key key) throws GeneralSecurityException {
+        Cipher rsa = Cipher.getInstance("RSA");
+        rsa.init(Cipher.ENCRYPT_MODE, key);
+        return rsa.doFinal(data);
     }
 
-    private static byte[] decrypt(byte[] data, Key key) {
-        try {
-            long s = System.nanoTime();
-            Cipher rsa = Cipher.getInstance("RSA");
-            rsa.init(Cipher.DECRYPT_MODE, key);
-            byte[] bytes = rsa.doFinal(data);
-            System.out.println("非对称解密花费时间： "+ (System.nanoTime()-s));
-            return bytes;
-        } catch (Exception e) {
-            throw new CryptoException(e);
-        }
+    private static byte[] decrypt(byte[] data, Key key) throws GeneralSecurityException {
+        Cipher rsa = Cipher.getInstance("RSA");
+        rsa.init(Cipher.DECRYPT_MODE, key);
+        return rsa.doFinal(data);
     }
 }

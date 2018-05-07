@@ -32,13 +32,9 @@ public class MessageDigestUtil {
      * @param algorithm 摘要算法
      * @return 摘要后的数据
      */
-    public static byte[] digest(byte[] data, String algorithm) {
-        try {
-            MessageDigest messageDigest = MessageDigest.getInstance(algorithm);
-            return messageDigest.digest(data);
-        } catch (NoSuchAlgorithmException e) {
-            throw new CryptoException(e);
-        }
+    public static byte[] digest(byte[] data, String algorithm) throws NoSuchAlgorithmException {
+        MessageDigest messageDigest = MessageDigest.getInstance(algorithm);
+        return messageDigest.digest(data);
     }
 
     /**
@@ -48,33 +44,33 @@ public class MessageDigestUtil {
      * @param algorithm 摘要算法
      * @return 摘要后的16进制字符串
      */
-    public static String digest2HexString(byte[] data, String algorithm) {
+    public static String digest2HexString(byte[] data, String algorithm) throws NoSuchAlgorithmException {
         byte[] digest = digest(data, algorithm);
         return toHexString(digest);
     }
 
-    public static byte[] md5Digest(byte[] data) {
+    public static byte[] md5Digest(byte[] data) throws NoSuchAlgorithmException {
         return digest(data, MD5);
     }
 
-    public static String md5Digest2HexString(byte[] data) {
+    public static String md5Digest2HexString(byte[] data) throws NoSuchAlgorithmException {
         return digest2HexString(data, MD5);
     }
 
 
-    public static byte[] sha1Digest(byte[] data) {
+    public static byte[] sha1Digest(byte[] data) throws NoSuchAlgorithmException {
         return digest(data, SHA1);
     }
 
-    public static String sha1Digest2HexString(byte[] data) {
+    public static String sha1Digest2HexString(byte[] data) throws NoSuchAlgorithmException {
         return digest2HexString(data, SHA1);
     }
 
-    public static byte[] sha256Digest(byte[] data) {
+    public static byte[] sha256Digest(byte[] data) throws NoSuchAlgorithmException {
         return digest(data, SHA256);
     }
 
-    public static String sha256Digest2HexString(byte[] data) {
+    public static String sha256Digest2HexString(byte[] data) throws NoSuchAlgorithmException {
         return digest2HexString(data, SHA256);
     }
 

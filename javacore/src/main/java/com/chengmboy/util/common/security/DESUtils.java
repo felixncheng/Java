@@ -1,6 +1,7 @@
 package com.chengmboy.util.common.security;
 
 
+import java.security.GeneralSecurityException;
 import java.security.SecureRandom;
 import java.util.Base64;
 import javax.crypto.*;
@@ -14,11 +15,11 @@ import com.chengmboy.util.exception.CryptoException;
  */
 public class DESUtils {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws GeneralSecurityException {
         process();
     }
 
-    private static void process() {
+    private static void process() throws GeneralSecurityException {
         byte[] key = getKey();
         String s = Base64.getEncoder().encodeToString(key);
         System.out.println("key: " + s);
@@ -39,50 +40,31 @@ public class DESUtils {
         System.out.println(data.equals(s2) ? "解密成功" : "失败");
     }
 
-    private static byte[] getKey() {
-        try {
-            SecureRandom random = new SecureRandom();
-            byte[] bytes = new byte[8];
-            random.nextBytes(bytes);
-            DESKeySpec keySpec = new DESKeySpec(bytes);
-            SecretKeyFactory factory = SecretKeyFactory.getInstance("DES");
-            SecretKey key = factory.generateSecret(keySpec);
-            return key.getEncoded();
-        } catch (Exception e) {
-            throw new CryptoException(e);
-        }
+    private static byte[] getKey() throws GeneralSecurityException {
+        SecureRandom random = new SecureRandom();
+        byte[] bytes = new byte[8];
+        random.nextBytes(bytes);
+        DESKeySpec keySpec = new DESKeySpec(bytes);
+        SecretKeyFactory factory = SecretKeyFactory.getInstance("DES");
+        SecretKey key = factory.generateSecret(keySpec);
+        return key.getEncoded();
     }
 
-    private static byte[] encrypt(byte[] data, byte[] key) {
-        try {
-            DESKeySpec keySpec = new DESKeySpec(key);
-            SecretKeyFactory factory = SecretKeyFactory.getInstance("DES");
-            SecretKey k = factory.generateSecret(keySpec);
-
-            long s = System.nanoTime();
-            Cipher cipher = Cipher.getInstance("DES");
-            cipher.init(Cipher.ENCRYPT_MODE, k);
-            byte[] bytes = cipher.doFinal(data);
-            System.out.println("对称加密花费时间： "+ (System.nanoTime()-s));
-            return bytes;
-        } catch (Exception e) {
-            throw new CryptoException(e);
-        }
+    private static byte[] encrypt(byte[] data, byte[] key) throws GeneralSecurityException {
+        DESKeySpec keySpec = new DESKeySpec(key);
+        SecretKeyFactory factory = SecretKeyFactory.getInstance("DES");
+        SecretKey k = factory.generateSecret(keySpec);
+        Cipher cipher = Cipher.getInstance("DES");
+        cipher.init(Cipher.ENCRYPT_MODE, k);
+        return cipher.doFinal(data);
     }
 
-    private static byte[] decrypt(byte[] data, byte[] key) {
-        try {
-            DESKeySpec keySpec = new DESKeySpec(key);
-            SecretKeyFactory factory = SecretKeyFactory.getInstance("DES");
-            SecretKey k = factory.generateSecret(keySpec);
-            long s = System.nanoTime();
-            Cipher cipher = Cipher.getInstance("DES");
-            cipher.init(Cipher.DECRYPT_MODE, k);
-            byte[] bytes = cipher.doFinal(data);
-            System.out.println("对称解密花费时间： "+ (System.nanoTime()-s));
-            return bytes;
-        } catch (Exception e) {
-            throw new CryptoException(e);
-        }
+    private static byte[] decrypt(byte[] data, byte[] key) throws GeneralSecurityException {
+        DESKeySpec keySpec = new DESKeySpec(key);
+        SecretKeyFactory factory = SecretKeyFactory.getInstance("DES");
+        SecretKey k = factory.generateSecret(keySpec);
+        Cipher cipher = Cipher.getInstance("DES");
+        cipher.init(Cipher.DECRYPT_MODE, k);
+        return cipher.doFinal(data);
     }
 }
