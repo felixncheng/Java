@@ -33,4 +33,25 @@ public class StringUtils {
         return r.toString();
     }
 
+    /**
+     * 将字符串第一个字符变成大写
+     */
+    public static String upperCaseFirst(String str) {
+        char c = str.charAt(0);
+        if (!Character.isUpperCase(c)) {
+            str = Character.toUpperCase(c) + str.substring(1, str.length());
+        }
+        return str;
+    }
+
+    /**
+     * 将字符串第一个字符变成小写
+     */
+    public static String lowerCaseFirst(String str) {
+        char c = str.charAt(0);
+        if (!Character.isLowerCase(c)) {
+            str = Character.toLowerCase(c) + str.substring(1, str.length());
+        }
+        return str;
+    }
 }
