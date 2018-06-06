@@ -1,11 +1,13 @@
 package com.chengmboy.jedis;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.chengmboy.datasource.DataBase;
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.Transaction;
 
 /**
  * @author cheng_mboy
@@ -16,10 +18,12 @@ public class JedisUtil {
     private static Jedis jedis = new Jedis("192.168.0.2");
 
 
-
     public static void main(String[] args) throws InterruptedException {
 
-        int[] ids = {87, 101, 102, 103, 104, 105, 106, 107,108,113,116,117};
+        int[] ids = {87, 101, 102, 103, 104, 105, 106, 107,108,113,116,117,123};
+        //int[] types = {0, 1, 2, 9, 10, 3, 4, 5, 6};
+
+        //int[] ids = {117};
         int[] types = {0, 1, 2, 9, 10, 3, 4, 5, 6};
 
         deleteAll(ids, types);
@@ -27,6 +31,14 @@ public class JedisUtil {
        for (int i = 3; i > 0; i--) {
             delete();
         }*/
+
+       /* long delete = delete("*sum*");
+        System.out.println(delete);*/
+    }
+
+    private static long delete(String pattern) {
+        Set<String> keys = jedis.keys(pattern);
+        return jedis.del(keys.toArray(new String[keys.size()]));
     }
 
     private static void delete() {
@@ -34,14 +46,33 @@ public class JedisUtil {
         int[] types = {0, 1, 2, 9, 10, 3, 4, 5, 6};
         for (int id : ids) {
             for (int type : types) {
-                jedis.rpop("m_klines_s_"+id+"_t_"+type);
+                jedis.rpop("m_klines_s_" + id + "_t_" + type);
             }
         }
 
     }
 
+    /**
+     * 限速器
+     */
+    public static boolean speedGovernor(String key, int max, int seconds) {
+        String current = jedis.get(key);
+        if (current != null && Integer.valueOf(current) > max) {
+            return false;
+        }
+        if (current == null) {
+            Transaction ts = jedis.multi();
+            ts.incr(key);
+            ts.expire(key, seconds);
+            ts.exec();
+        } else {
+            jedis.incr(key);
+        }
+        return true;
+    }
+
     private static void getKeys() {
-        int[] huobiIds = {79,69,68,78};
+        int[] huobiIds = {79, 69, 68, 78};
         int[] types = {0};
 
         for (int id : huobiIds) {

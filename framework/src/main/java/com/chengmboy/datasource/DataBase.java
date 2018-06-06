@@ -34,10 +34,11 @@ public class DataBase {
 
 
     public Map<String, Object> selectOne(String sql) {
-        try {
-            Connection connection = this.dataSource.getConnection();
+        try (Connection connection = this.dataSource.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            long s = System.currentTimeMillis();
             ResultSet resultSet = preparedStatement.executeQuery();
+            System.out.println(System.currentTimeMillis() - s);
             int length = resultSet.getMetaData().getColumnCount();
             if (length > 1) {
                 throw new DataBaseException("返回数据大于1条");
@@ -113,7 +114,7 @@ public class DataBase {
             sql = sql.toUpperCase();
             String valueSql = sql.substring(sql.indexOf("VALUES") + 6);
             StringBuilder builder = new StringBuilder(sql);
-            for (int i = paramList.size()-1; i > 0; i--) {
+            for (int i = paramList.size() - 1; i > 0; i--) {
                 builder.append(",")
                         .append(valueSql);
             }

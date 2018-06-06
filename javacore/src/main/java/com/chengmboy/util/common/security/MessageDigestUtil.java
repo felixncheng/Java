@@ -2,8 +2,6 @@ package com.chengmboy.util.common.security;
 
 import java.security.*;
 
-import com.chengmboy.util.exception.CryptoException;
-
 /**
  * 该HashMessage类为应用程序提供消息摘要算法的功能，如SHA-1或SHA-256。
  * 消息摘要是采用任意大小的数据并输出固定长度散列值的安全单向散列函数。

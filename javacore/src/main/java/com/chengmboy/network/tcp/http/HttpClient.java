@@ -9,10 +9,10 @@ import java.net.Socket;
 public class HttpClient {
 
     public static void main(String[] args) throws IOException {
-        Socket socket = new Socket("localhost", 8888);
+        Socket socket = new Socket("localhost", 8080);
         try (PrintWriter pw = new PrintWriter(socket.getOutputStream());
              BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
-            pw.println("GET /?abc=2 HTTP/1.1");
+            pw.println("GET /person HTTP/1.1");
             pw.println("Connection: keep-alive");
             pw.println("");
             pw.flush();
