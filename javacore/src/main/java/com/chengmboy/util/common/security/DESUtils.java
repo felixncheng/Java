@@ -39,7 +39,7 @@ public class DESUtils {
         System.out.println(data.equals(s2) ? "解密成功" : "失败");
     }
 
-    private static byte[] getKey() throws GeneralSecurityException {
+    public static byte[] getKey() throws GeneralSecurityException {
         SecureRandom random = new SecureRandom();
         byte[] bytes = new byte[8];
         random.nextBytes(bytes);
@@ -49,7 +49,7 @@ public class DESUtils {
         return key.getEncoded();
     }
 
-    private static byte[] encrypt(byte[] data, byte[] key) throws GeneralSecurityException {
+    public static byte[] encrypt(byte[] data, byte[] key) throws GeneralSecurityException {
         DESKeySpec keySpec = new DESKeySpec(key);
         SecretKeyFactory factory = SecretKeyFactory.getInstance("DES");
         SecretKey k = factory.generateSecret(keySpec);
@@ -58,7 +58,7 @@ public class DESUtils {
         return cipher.doFinal(data);
     }
 
-    private static byte[] decrypt(byte[] data, byte[] key) throws GeneralSecurityException {
+    public static byte[] decrypt(byte[] data, byte[] key) throws GeneralSecurityException {
         DESKeySpec keySpec = new DESKeySpec(key);
         SecretKeyFactory factory = SecretKeyFactory.getInstance("DES");
         SecretKey k = factory.generateSecret(keySpec);
