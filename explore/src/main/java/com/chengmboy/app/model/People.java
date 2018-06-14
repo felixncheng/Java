@@ -1,5 +1,8 @@
 package com.chengmboy.app.model;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 /**
  * @author cheng_mboy
  */
@@ -45,6 +48,10 @@ public class People {
     }
 
     public String getName() {
+        return name;
+    }
+
+    public String getNameB() {
         return name;
     }
 
