@@ -1,5 +1,12 @@
 package com.chengmboy.util.common;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.Arrays;
+
 /**
  * @author cheng_mboy
  */
@@ -53,5 +60,84 @@ public class StringUtils {
             str = Character.toLowerCase(c) + str.substring(1, str.length());
         }
         return str;
+    }
+
+    public static BigDecimal ipToBigDecimal(String addr) throws UnknownHostException {
+        InetAddress a = InetAddress.getByName(addr);
+        byte[] bytes = a.getAddress();
+        return new BigDecimal(new BigInteger(1, bytes));
+    }
+
+
+    public static String numberToIP(BigDecimal ipNumber) throws UnknownHostException {
+        BigInteger ip = ipNumber.toBigInteger();
+        String ipString = "";
+        byte[] bytes = ip.toByteArray();
+        if (bytes.length > 4) {
+            bytes = Arrays.copyOfRange(bytes, 1, bytes.length);
+        }
+        InetAddress address = InetAddress.getByAddress(bytes);
+        if (address instanceof Inet4Address) {
+            return longToip(ip.longValue());
+        }
+        BigInteger a = new BigInteger("FFFF", 16);
+        for (int i = 0; i < 8; i++) {
+            ipString = ip.and(a).toString(16) + ":" + ipString;
+            ip = ip.shiftRight(16);
+        }
+        return ipString.substring(0, ipString.length() - 1);
+    }
+
+
+    public static BigInteger ipToBigInteger(String addr) throws UnknownHostException {
+        InetAddress a = InetAddress.getByName(addr);
+        byte[] bytes = a.getAddress();
+        System.out.println(a.getHostAddress());
+        return new BigInteger(1, bytes);
+    }
+
+    public static String numberToIPv6(BigInteger ipNumber) {
+        String ipString = "";
+        BigInteger a = new BigInteger("FFFF", 16);
+        for (int i = 0; i < 8; i++) {
+            ipString = ipNumber.and(a).toString(16) + ":" + ipString;
+
+            ipNumber = ipNumber.shiftRight(16);
+        }
+        return ipString.substring(0, ipString.length() - 1);
+
+    }
+
+    public static String longToip(long ipLong) {
+        long[] mask = {0x000000FF, 0x0000FF00, 0x00FF0000, 0xFF000000};
+        StringBuilder ipInfo = new StringBuilder();
+        for (int i = 0; i < 4; i++) {
+            long num = (ipLong & mask[i]) >> (i * 8);
+            if (i > 0) {
+                ipInfo.insert(0, ".");
+            }
+            ipInfo.insert(0, Long.toString(num, 10));
+        }
+        return ipInfo.toString();
+    }
+
+
+    public static long ipToLong(String strIP) {
+        try {
+            if (strIP == null || strIP.length() == 0) {
+                return 0L;
+            }
+            long[] ip = new long[4];
+            int position1 = strIP.indexOf(".");
+            int position2 = strIP.indexOf(".", position1 + 1);
+            int position3 = strIP.indexOf(".", position2 + 1);
+            ip[0] = Long.parseLong(strIP.substring(0, position1));
+            ip[1] = Long.parseLong(strIP.substring(position1 + 1, position2));
+            ip[2] = Long.parseLong(strIP.substring(position2 + 1, position3));
+            ip[3] = Long.parseLong(strIP.substring(position3 + 1));
+            return (ip[0] << 24) + (ip[1] << 16) + (ip[2] << 8) + ip[3];
+        } catch (Exception ex) {
+            return 0L;
+        }
     }
 }

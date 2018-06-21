@@ -47,18 +47,4 @@ public class ExcelUtils {
         }
         return data;
     }
-
-    public static void main(String[] args) throws Exception {
-        String[][] excel = ExcelUtils.readExcel(2, 0, new File("H:/Packages/微网国际通道代码格式.xlsx"), 0);
-        for (int i = 1; i < excel.length; i++) {
-            String s = excel[i][1];
-            String[] split = s.split(" ");
-            StringBuilder name= new StringBuilder();
-            for (String s1 : split) {
-                name.append("_").append(s1);
-            }
-            System.out.printf("%s(\"%s\",%s)", name.substring(1,name.length()).toUpperCase(), excel[i][2], excel[i][3].substring(0,excel[i][3].length()-2));
-            System.out.println(",");
-        }
-    }
 }
