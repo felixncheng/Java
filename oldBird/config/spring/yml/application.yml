@@ -1,0 +1,49 @@
+server:
+  port: 7081
+
+spring:
+  datasource:
+    name: default
+    url: jdbc:mysql://localhost:3306/cjcbs?useUnicode=true&useSSL=false&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5Dialect
+  http:
+    multipart:
+      max-file-size: 10Mb
+      max-request-size: 100Mb
+
+apiclient:
+  bis:
+    baseUrl: https://dev-cjyun-api.ecaicn.com/
+  cms:
+    baseUrl: https://dev-cjcms-api.ecaicn.com/
+
+logging:
+  config: classpath:config/logback-local.xml
+  level:
+    root: ERROR
+    com.ecaicn.cbs.webapp.job.jobs.SchoolCoursewareSyncJob: TRACE
+
+app:
+  debug: true
+  mode: school
+  job:
+    courseware-sync:
+      class-name: com.ecaicn.cbs.webapp.job.jobs.SchoolCoursewareSyncJob
+    bid-sync:
+      class-name: com.ecaicn.cbs.webapp.job.jobs.SchoolBaseDataSyncJob
+
+storage:
+  data:
+    path: D:/work/Storage/cjcbs/school/data/
+  courseware:
+    path: D:/work/Storage/cjcbs/school/data/coursewares/
+  update:
+    path: D:/work/Storage/cjcbs/school/data/update/
