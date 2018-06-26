@@ -28,4 +28,20 @@ public class StreamUtils {
         out.flush();
         return byteCount;
     }
+
+    /**
+     * 序列化实现深度克隆，需要克隆对象及内部对象都必须实现Serializable接口
+     *
+     * @param src 需要克隆的对象
+     * @return 克隆后对象
+     * @throws Exception 克隆失败
+     */
+    public static <T> T deepClone(T src) throws Exception {
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        try (ObjectOutputStream outputStream = new ObjectOutputStream(output)) {
+            outputStream.writeObject(src);
+            ObjectInputStream inputStream = new ObjectInputStream(new ByteArrayInputStream(output.toByteArray()));
+            return (T) inputStream.readObject();
+        }
+    }
 }
