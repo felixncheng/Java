@@ -1,44 +1,75 @@
 package com.chengmboy.action.schedule;
 
-import java.util.concurrent.DelayQueue;
-import java.util.concurrent.Delayed;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author cheng_mboy
  */
 public class ScheduleCenter {
 
-    private DelayQueue<DelayTask> workQueue = new DelayQueue<>();
+    private static final ThreadFactory DEFAULT = new ScheduleCenterFactory("ScheduleCenter");
+    private static final int DEFAULT_EVENT_LOOP_THREADS;
+
+    static {
+        DEFAULT_EVENT_LOOP_THREADS = Math.max(1, Runtime.getRuntime().availableProcessors() * 2);
+    }
+
+    private ThreadPoolExecutor bossGroup;
+    private DelayQueue<DelayTask> workQueue;
+    private ThreadFactory threadFactory;
+    private int nThreads;
+
+
+    public ScheduleCenter(int nThreads, ThreadFactory threadFactory) {
+        this.threadFactory = threadFactory;
+        this.nThreads = nThreads == 0 ? DEFAULT_EVENT_LOOP_THREADS : nThreads;
+        init();
+    }
+
+    public ScheduleCenter() {
+        this.threadFactory = DEFAULT;
+        this.nThreads = DEFAULT_EVENT_LOOP_THREADS;
+        init();
+    }
 
     public static void main(String[] args) {
         ScheduleCenter center = new ScheduleCenter();
-        center.schedule(() -> {
-            System.out.println("Hello World " + System.currentTimeMillis() / 1000);
-            try {
-                TimeUnit.SECONDS.sleep(3);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }, 0, TimeUnit.SECONDS);
+        for (int i = 0; i < 5; i++) {
+            center.scheduleAtFixRate(() -> {
+                System.out.println("Hello World " + System.currentTimeMillis() / 1000 + " " + Thread.currentThread());
+                try {
+                    TimeUnit.SECONDS.sleep(5);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }, 0, 2, TimeUnit.SECONDS);
+        }
+
+    }
+
+    private void init() {
+        bossGroup = new ThreadPoolExecutor(nThreads, nThreads, 0L, TimeUnit.NANOSECONDS,
+                new LinkedBlockingQueue<>(nThreads), threadFactory);
+        workQueue = new DelayQueue<>();
     }
 
     public void schedule(Runnable runnable, long delay, TimeUnit unit) {
         DelayTask task = new DelayTask(triggerTime(delay, unit), runnable);
         workQueue.add(task);
-        new Thread(this::execute).start();
+        bossGroup.submit(this::execute);
     }
 
     public void scheduleAtFixRate(Runnable runnable, long initDelay, long period, TimeUnit unit) {
         DelayTask task = new DelayTask(triggerTime(initDelay, unit), runnable, unit.toNanos(period));
         workQueue.add(task);
-        new Thread(this::execute).start();
+        bossGroup.submit(this::execute);
     }
 
     public void scheduleAtFixDelay(Runnable runnable, long initDelay, long delay, TimeUnit unit) {
         DelayTask task = new DelayTask(triggerTime(initDelay, unit), runnable, unit.toNanos(-delay));
         workQueue.add(task);
-        new Thread(this::execute).start();
+        bossGroup.submit(this::execute);
     }
 
     private void execute() {
@@ -84,6 +115,23 @@ public class ScheduleCenter {
 
     private long triggerTime(long delay, TimeUnit unit) {
         return System.nanoTime() + unit.toNanos(delay);
+    }
+
+    private static class ScheduleCenterFactory implements ThreadFactory {
+
+        private static final AtomicInteger poolId = new AtomicInteger();
+
+        private final AtomicInteger nextId = new AtomicInteger();
+        private final String prefix;
+
+        public ScheduleCenterFactory(String poolName) {
+            prefix = poolName + '-' + poolId.incrementAndGet() + '-';
+        }
+
+        @Override
+        public Thread newThread(Runnable r) {
+            return new Thread(r, prefix + nextId.incrementAndGet());
+        }
     }
 
     private class DelayTask implements Delayed, Runnable {
