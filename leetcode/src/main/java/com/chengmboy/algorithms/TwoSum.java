@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * Two Sum
+ * 从集合中寻找唯一目标组合
  * @author cheng_mboy
  */
 public class TwoSum {

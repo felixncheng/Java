@@ -1,6 +1,8 @@
 package com.chengmboy.algorithms;
 
 /**
+ * Add Two Numbers
+ * 每个链表对应一个相应位，根据相应位权重，操作两个链表
  * @author cheng_mboy
  */
 public class AddTwoNumbers {

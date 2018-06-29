@@ -6,6 +6,8 @@ import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author cheng_mboy
@@ -68,7 +70,6 @@ public class StringUtils {
         return new BigDecimal(new BigInteger(1, bytes));
     }
 
-
     public static String numberToIP(BigDecimal ipNumber) throws UnknownHostException {
         BigInteger ip = ipNumber.toBigInteger();
         String ipString = "";
@@ -87,7 +88,6 @@ public class StringUtils {
         }
         return ipString.substring(0, ipString.length() - 1);
     }
-
 
     public static BigInteger ipToBigInteger(String addr) throws UnknownHostException {
         InetAddress a = InetAddress.getByName(addr);
@@ -121,7 +121,6 @@ public class StringUtils {
         return ipInfo.toString();
     }
 
-
     public static long ipToLong(String strIP) {
         try {
             if (strIP == null || strIP.length() == 0) {
@@ -139,5 +138,46 @@ public class StringUtils {
         } catch (Exception ex) {
             return 0L;
         }
+    }
+
+    /**
+     * 寻找最长字串长度
+     */
+    public int lengthOfLongestSubstring(String s) {
+        char[] chars = s.toCharArray();
+        Set<Character> longest = new HashSet<>();
+        int r = 0;
+        for (int i = 0; i < chars.length; i++) {
+            if (longest.contains(chars[i])) {
+                r = Math.max(longest.size(), r);
+                longest = new HashSet<>();
+            }
+            longest.add(chars[i]);
+        }
+        return r;
+    }
+
+    /**
+     * 寻找最长字串长度
+     */
+    public String longestSubstring(String s) {
+        char[] chars = s.toCharArray();
+        Set<Character> longest = new HashSet<>();
+        StringBuilder sub = new StringBuilder();
+        int r = 0;
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < chars.length; i++) {
+            if (longest.contains(chars[i])) {
+                if (longest.size() > r) {
+                    r = longest.size();
+                    result = sub;
+                }
+                longest = new HashSet<>();
+                sub = new StringBuilder();
+            }
+            longest.add(chars[i]);
+            sub.append(chars[i]);
+        }
+        return result.toString();
     }
 }
