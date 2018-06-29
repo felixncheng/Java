@@ -8,7 +8,6 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class ScheduleCenter {
 
-    private static final ThreadFactory DEFAULT = new ScheduleCenterFactory("ScheduleCenter");
     private static final int DEFAULT_EVENT_LOOP_THREADS;
 
     static {
@@ -28,24 +27,15 @@ public class ScheduleCenter {
     }
 
     public ScheduleCenter() {
-        this.threadFactory = DEFAULT;
+        this.threadFactory = new ScheduleCenterFactory("ScheduleCenter");
         this.nThreads = DEFAULT_EVENT_LOOP_THREADS;
         init();
     }
 
-    public static void main(String[] args) {
-        ScheduleCenter center = new ScheduleCenter();
-        for (int i = 0; i < 5; i++) {
-            center.scheduleAtFixRate(() -> {
-                System.out.println("Hello World " + System.currentTimeMillis() / 1000 + " " + Thread.currentThread());
-                try {
-                    TimeUnit.SECONDS.sleep(5);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }, 0, 2, TimeUnit.SECONDS);
-        }
-
+    public ScheduleCenter(int nThreads) {
+        this.threadFactory = new ScheduleCenterFactory("ScheduleCenter");
+        this.nThreads = nThreads;
+        init();
     }
 
     private void init() {
