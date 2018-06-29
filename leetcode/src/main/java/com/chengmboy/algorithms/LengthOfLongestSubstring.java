@@ -31,7 +31,7 @@ public class LengthOfLongestSubstring {
     }
 
     /**
-     * 寻找最长字串长度
+     * 寻找不重复最长子串
      */
     public String longestSubstring(String s) {
         char[] chars = s.toCharArray();

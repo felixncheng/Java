@@ -141,7 +141,7 @@ public class StringUtils {
     }
 
     /**
-     * 寻找最长字串长度
+     * 寻找不重复最长子串长度
      */
     public int lengthOfLongestSubstring(String s) {
         char[] chars = s.toCharArray();
@@ -158,7 +158,7 @@ public class StringUtils {
     }
 
     /**
-     * 寻找最长字串长度
+     * 寻找不重复最长子串
      */
     public String longestSubstring(String s) {
         char[] chars = s.toCharArray();
