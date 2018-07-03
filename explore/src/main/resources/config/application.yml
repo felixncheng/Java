@@ -12,10 +12,16 @@ spring:
     port: 5672
     username: cheng
     password: 123456
+  security:
+    user:
+      name: cheng
+      password: 123456
 
 
 mybatis:
   show-sql: true
+
+
 
 management:
   endpoints:
