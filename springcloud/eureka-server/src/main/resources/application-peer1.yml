@@ -1,0 +1,13 @@
+server:
+  port: 9991
+
+eureka:
+  instance:
+    hostname: peer1
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
+    serviceUrl:
+      defaultZone: http://peer2:9992/eureka/,http://peer3:9993/eureka/
+  server:
+    renewalPercentThreshold: 0.49
