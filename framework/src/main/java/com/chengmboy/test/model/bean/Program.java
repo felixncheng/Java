@@ -1,5 +1,8 @@
 package com.chengmboy.test.model.bean;
 
+import java.math.BigDecimal;
+
+import com.alibaba.fastjson.JSONObject;
 import com.chengmboy.test.model.SubUser;
 import com.chengmboy.test.model.User;
 import org.springframework.beans.BeanUtils;
@@ -9,27 +12,22 @@ import org.springframework.beans.BeanUtils;
  */
 public class Program {
 
+    private BigDecimal id;
+
     public static void main(String[] args) {
-        User user = new User();
-        user.setId(1L);
-        user.setAddr("深圳");
-        user.setName("程");
-        SubUser subUser = new SubUser();
-        for (int i = 0; i < 10; i++) {
-            long i1 = System.nanoTime();
-            BeanUtils.copyProperties(user, subUser);
-            long i2 = System.nanoTime();
-            subUser.setId(user.getId());
-            subUser.setName(user.getName());
-            long i3 = System.nanoTime();
-            System.out.println("beanUtils 花费时间: "+ (i2-i1));
 
-            System.out.println("通常花费时间: "+ (i3-i2));
-            System.out.println("-------------");
-        }
+        Program program = new Program();
+        program.setId(new BigDecimal("123456789123456789123456789"));
+        String s = JSONObject.toJSONString(program);
+        Program program1 = JSONObject.parseObject(s, Program.class);
+        System.out.println(program1.getId());
+    }
 
+    public BigDecimal getId() {
+        return id;
+    }
 
-
-        System.out.println(subUser);
+    public void setId(BigDecimal id) {
+        this.id = id;
     }
 }

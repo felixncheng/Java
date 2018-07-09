@@ -1,0 +1,3 @@
+#开启MongoDB认证模式
+sc delete MongoDB
+sc create MongoDB binpath= "C:\Program Files\MongoDB\Server\4.0\bin\mongod.exe --dbpath D:\MongoDB\data --logpath D:\MongoDB\log\log.log  --logappend --auth --service"
