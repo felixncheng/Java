@@ -13,7 +13,7 @@ import io.netty.handler.stream.ChunkedWriteHandler;
 /**
  * @author cheng_mboy
  */
-public class ChatServerInitializer extends ChannelInitializer {
+public class ChatServerInitializer extends ChannelInitializer<Channel> {
 
     private final ChannelGroup group;
 
@@ -25,6 +25,7 @@ public class ChatServerInitializer extends ChannelInitializer {
     protected void initChannel(Channel ch) throws Exception {
         ChannelPipeline pipeline = ch.pipeline();
         pipeline.addLast(new HttpServerCodec())
+                .addLast(new ChunkedWriteHandler())
                 .addLast(new HttpObjectAggregator(64 * 1024))
                 .addLast(new HttpRequestHandler("/ws"))
                 .addLast(new WebSocketServerProtocolHandler("/ws"))

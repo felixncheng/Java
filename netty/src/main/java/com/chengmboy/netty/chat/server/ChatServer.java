@@ -5,6 +5,7 @@ import java.net.InetSocketAddress;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelInitializer;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
@@ -22,18 +23,22 @@ public class ChatServer {
     private final EventLoopGroup group = new NioEventLoopGroup();
     private Channel channel;
 
-    private ChannelFuture start(InetSocketAddress address) {
+    public ChannelFuture start(InetSocketAddress address) {
         ServerBootstrap bootstrap = new ServerBootstrap();
         bootstrap.group(group)
                 .channel(NioServerSocketChannel.class)
-                .childHandler(new ChatServerInitializer(channelGroup));
+                .childHandler(createInitializer(channelGroup));
         ChannelFuture future = bootstrap.bind(address);
         future.syncUninterruptibly();
         channel = future.channel();
         return future;
     }
 
-    public void destory() {
+    protected ChannelInitializer<Channel> createInitializer(ChannelGroup group) {
+        return new ChatServerInitializer(group);
+    }
+
+    public void destroy() {
         if (channel != null) {
             channel.close();
         }
@@ -41,13 +46,13 @@ public class ChatServer {
         group.shutdownGracefully();
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         int port = 9999;
         final ChatServer endpoint = new ChatServer();
         ChannelFuture future = endpoint.start(
                 new InetSocketAddress(port));
         Runtime.getRuntime().addShutdownHook(
-                new Thread(endpoint::destory));
+                new Thread(endpoint::destroy));
         future.channel().closeFuture().syncUninterruptibly();
     }
 }

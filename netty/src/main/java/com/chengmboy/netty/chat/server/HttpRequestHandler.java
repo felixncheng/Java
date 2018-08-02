@@ -7,6 +7,8 @@ import java.net.URL;
 
 import io.netty.channel.*;
 import io.netty.handler.codec.http.*;
+import io.netty.handler.ssl.SslHandler;
+import io.netty.handler.stream.ChunkedNioFile;
 
 /**
  * @author cheng_mboy
@@ -54,7 +56,12 @@ public class HttpRequestHandler extends SimpleChannelInboundHandler<FullHttpRequ
                         HttpHeaderValues.KEEP_ALIVE);
             }
             ctx.write(response);
-            ctx.write(new DefaultFileRegion(file.getChannel(), 0, file.length()));
+            if (ctx.pipeline().get(SslHandler.class) == null) {
+                ctx.write(new DefaultFileRegion(
+                        file.getChannel(), 0, file.length()));
+            } else {
+                ctx.write(new ChunkedNioFile(file.getChannel()));
+            }
             ChannelFuture future = ctx.writeAndFlush(LastHttpContent.EMPTY_LAST_CONTENT);
             if (!keepAlive) {
                 future.addListener(ChannelFutureListener.CLOSE);
