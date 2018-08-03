@@ -42,7 +42,7 @@ public class TimeServer {
             ChannelFuture f = b.bind(port).sync(); // (7)
 
             // Wait until the server socket is closed.
-            // In this example, this does not happen, but you can do that to gracefully
+            // In this example, this does not happen, but you can do that gracefully
             // shut down your server.
             f.channel().closeFuture().sync();
         } finally {
@@ -58,6 +58,6 @@ public class TimeServer {
         } else {
             port = 8080;
         }
-        new DiscardServer(port).run();
+        new TimeServer(port).run();
     }
 }
