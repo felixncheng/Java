@@ -1,4 +1,4 @@
-package com.chengmboy.app.annotation;
+package com.chengmboy.app.aop.annotation;
 
 import java.lang.annotation.*;
 

@@ -1,9 +1,9 @@
-package com.chengmboy.app.config;
+package com.chengmboy.app.interceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.chengmboy.app.annotation.Log;
+import com.chengmboy.app.aop.annotation.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.method.HandlerMethod;
